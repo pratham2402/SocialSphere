@@ -158,7 +158,7 @@ public class ControllerServlet extends HttpServlet {
         for (PostWithUsername post : posts) {
             List<CommentWithUsername> comments = commentDAO.viewAllCommentsByPostId(post.getPostId());
             commentsMap.put(post.getPostId(), comments);
-            commentCountMap.put(post.getPostId(), comments.size());
+            commentCountMap.put(post.getPostId(), commentDAO.getCommentCountByPostId(post.getPostId()));
         }
         request.setAttribute("posts", posts);
         request.setAttribute("commentsMap", commentsMap);

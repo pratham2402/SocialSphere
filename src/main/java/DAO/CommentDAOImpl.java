@@ -48,4 +48,22 @@ public class CommentDAOImpl implements CommentDAO {
         }
         return comments;
     }
+
+    @Override
+    public int getCommentCountByPostId(int postId) {
+        int count = 0;
+        try {
+            Connection conn = DBUtil.getConnection();
+            String sql = "SELECT COUNT(*) FROM COMMENTS WHERE POST_ID = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, postId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }
