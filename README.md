@@ -25,14 +25,15 @@ A simple, Facebook-like social media web application built using **Java Servlets
 
 ## 🛠️ Tech Stack
 
-| Layer         | Technology       |
-|---------------|------------------|
-| Frontend      | HTML (No CSS/JS) |
-| Server-side   | Java Servlets, JSP |
-| Database      | H2 Database       |
-| DB Access     | JDBC              |
+| Layer         | Technology              |
+|---------------|-------------------------|
+| Frontend      | HTML, CSS               |
+| Server-side   | Java Servlets, JSP      |
+| Database      | H2 Database             |
+| DB Access     | JDBC                    |
 | IDE           | IntelliJ IDEA / Eclipse |
-| Web Server    | Apache Tomcat 11 |
+| Web Server    | Apache Tomcat 11        |
+| Build Tool    | Maven                   |
 
 ---
 
@@ -40,75 +41,68 @@ A simple, Facebook-like social media web application built using **Java Servlets
 
 ```
 SocialSphere/
+├── db/                         # H2 database files
+│   ├── SocialSphereDB.mv.db
+│   └── SocialSphereDB.trace.db
 ├── src/
-│   ├── main/
-│   │   ├── java/         # Java Servlet classes
-│   │   └── webapp/
-│   │       ├── WEB-INF/  # web.xml configuration
-│   │       └── *.jsp     # JSP pages
+│   └── main/
+│       ├── java/
+│       │   ├── DAO/            # Data Access Objects
+│       │   ├── models/         # Entity classes
+│       │   ├── servlets/       # Main Controller Servlet
+│       │   └── utils/          # Utility classes (DBUtil)
+│       ├── resources/          # Resources (if any)
+│       └── webapp/
+│           ├── WEB-INF/
+│           │   └── web.xml     # Servlet configuration
+│           ├── createpost.jsp
+│           ├── home.jsp
+│           ├── login.jsp
+│           ├── register.jsp
+│           └── welcome.jsp
 ├── .gitignore
-├── pom.xml (if using Maven)
-└── README.md
+├── pom.xml
+├── README.md
+└── target/                     # Build output (ignored)
 ```
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚡ Getting Started
 
-1. **Clone the repo**:
+### Prerequisites
+- Java 8 or above
+- Maven
+- Apache Tomcat 11 (or compatible)
+
+### Setup & Run
+1. **Clone the repository:**
    ```bash
    git clone https://github.com/pratham2402/SocialSphere.git
+   cd SocialSphere
    ```
-
-2. **Open in IntelliJ or Eclipse** and configure:
-   - Java SDK (1.8 or higher)
-   - Apache Tomcat server
-
-3. **Run H2 Database** (Embedded or Server mode)
-
-4. **Deploy to Tomcat**
-
-5. Access app at:  
-   `http://localhost:8080/SocialSphere/`
+2. **Build the project:**
+   ```bash
+   mvn clean package
+   ```
+3. **Deploy the WAR file:**
+   - Deploy `target/SocialSphere.war` to your Tomcat server's `webapps` directory.
+4. **Access the app:**
+   - Open [http://localhost:8080/SocialSphere](http://localhost:8080/SocialSphere) in your browser.
 
 ---
 
-## 📝 Functional Requirements
-
-- **Registration**: Validate unique username and store credentials.
-- **Login**: Authenticate using stored user data.
-- **Post Creation**: Allow logged-in users to submit posts.
-- **Post Viewing**: Display all user posts chronologically.
-- **Commenting**: Allow users to comment on any post.
+## 📝 Usage
+- Register a new account.
+- Log in with your credentials.
+- Create, view, and comment on posts.
 
 ---
 
-## 📦 Dependencies (if using Maven)
-
-```xml
-<dependencies>
-    <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <version>2.1.214</version>
-    </dependency>
-    <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>4.0.1</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-```
+## 🤝 Contributing
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
 ---
 
 ## 📄 License
-
-This project is for educational purposes only.
-
----
-
-## 🙌 Acknowledgments
-
-Project built as part of Java EE practice to strengthen understanding of Servlets, JSP, and JDBC integration.
+This project is open source and available under the [MIT License](LICENSE).
