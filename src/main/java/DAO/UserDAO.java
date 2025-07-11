@@ -7,4 +7,5 @@ public interface UserDAO {
     boolean login(User user);
 
     int getUserIdByUsername(String username);
+    boolean usernameExists(String username);
 }

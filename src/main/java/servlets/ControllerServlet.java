@@ -43,6 +43,9 @@ public class ControllerServlet extends HttpServlet {
                 if (userDAO.login(user)) {
                     session.setAttribute("user", user);
                     response.sendRedirect("ControllerServlet");
+                } else if (userDAO.usernameExists(username)) {
+                    request.setAttribute("error", "Incorrect password. Please try again.");
+                    request.getRequestDispatcher("login.jsp").forward(request, response);
                 } else {
                     request.setAttribute("error", "User is not registered. Please register first.");
                     request.getRequestDispatcher("register.jsp").forward(request, response);

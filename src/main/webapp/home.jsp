@@ -8,7 +8,116 @@
 <head>
     <title>Home - SocialSphere</title>
     <style>
-        .container { max-width: 600px; margin: 40px auto; }
+        body {
+            background: #f4f6fb;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            padding: 36px 36px 28px 36px;
+        }
+        h1, h2, h3 {
+            color: #2d3a4b;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+        h2 {
+            margin-bottom: 18px;
+        }
+        .welcome {
+            background: #e8f0fe;
+            color: #2563eb;
+            border-radius: 8px;
+            padding: 12px 18px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-size: 17px;
+        }
+        form {
+            margin-bottom: 0;
+        }
+        input[type="text"], input[type="password"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 15px;
+            background: #f9fafb;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
+            border: 1.5px solid #4f8cff;
+            outline: none;
+        }
+        button, input[type="submit"] {
+            background: #4f8cff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 4px;
+        }
+        button:hover, input[type="submit"]:hover {
+            background: #2563eb;
+        }
+        .post {
+            border:1px solid #e5e7eb;
+            margin:10px 0;
+            padding:18px 16px 12px 16px;
+            border-radius: 8px;
+            background: #fafbfc;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .post h3 {
+            margin:0 0 8px 0;
+        }
+        .post p {
+            margin:0 0 8px 0;
+        }
+        .post .meta {
+            font-size:13px;
+            color:#555;
+            margin-bottom:5px;
+        }
+        .post .comments {
+            margin-top:15px;
+            padding-left:0;
+        }
+        ul {
+            list-style-type:none;
+            padding-left:0;
+        }
+        li {
+            margin-bottom:6px;
+            border-bottom:1px solid #eee;
+            padding-bottom:4px;
+        }
+        .no-comments {
+            color:#888;
+        }
+        .comment-message {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 800px) {
+            .container {
+                max-width: 98vw;
+                padding: 12px 4vw;
+            }
+        }
     </style>
 </head>
 <body>
@@ -37,26 +146,25 @@
     <h2>All Posts</h2>
     <div>
         <%
-            java.util.List posts = (java.util.List) request.getAttribute("posts");
+            List<models.PostWithUsername> posts = (List<models.PostWithUsername>) request.getAttribute("posts");
             int postCount = (posts == null) ? 0 : posts.size();
-            Map commentCountMap = (Map) request.getAttribute("commentCountMap");
+            Map<Integer, Integer> commentCountMap = (Map<Integer, Integer>) request.getAttribute("commentCountMap");
         %>
         <div style="margin-bottom:10px; font-weight:bold;">Total Posts: <%= postCount %></div>
         <% if (postCount == 0) { %>
             <p>No posts yet.</p>
         <% } else {
-                for (Object obj : posts) {
-                    models.PostWithUsername post = (models.PostWithUsername) obj;
+                for (models.PostWithUsername post : posts) {
         %>
-            <div style="border:1px solid #ddd; margin:10px 0; padding:10px;">
+            <div class="post">
                 <a id="post-<%= post.getPostId() %>"></a>
-                <h3 style="margin:0 0 8px 0;"><%= post.getPostTitle() %></h3>
-                <p style="margin:0 0 8px 0;"><%= post.getPostContent() %></p>
-                <div style="font-size:13px;">Posted by <b><%= post.getUsername() %></b> on <%= post.getTimestamp() %></div>
-                <div style="font-size:13px; color:#555; margin-bottom:5px;">
+                <h3><%= post.getPostTitle() %></h3>
+                <p><%= post.getPostContent() %></p>
+                <div class="meta">Posted by <b><%= post.getUsername() %></b> on <%= post.getTimestamp() %></div>
+                <div class="meta" style="margin-bottom:5px;">
                     Total Comments: <%= commentCountMap.get(post.getPostId()) %>
                 </div>
-                <div style="margin-top:15px; padding-left:0;">
+                <div class="comments">
                     <b>Comments:</b>
 
                     <form action="ControllerServlet" method="post" style="margin-top:8px; margin-bottom:12px;">
@@ -71,24 +179,23 @@
                             session.removeAttribute("commentMessage");
                             session.removeAttribute("commentMessagePostId");
                     %>
-                        <div style="color: <%= commentMessage.contains("successfully") ? "green" : "red" %>; margin-bottom: 10px;">
+                        <div class="comment-message">
                             <%= commentMessage %>
                         </div>
                     <% } %>
-                    <ul style="list-style-type:none; padding-left:0;">
+                    <ul>
                         <%
-                            Map<Integer, List> commentsMap = (Map<Integer, java.util.List>) request.getAttribute("commentsMap");
-                            java.util.List comments = (commentsMap != null) ? commentsMap.get(post.getPostId()) : null;
+                            Map<Integer, List<models.CommentWithUsername>> commentsMap = (Map<Integer, List<models.CommentWithUsername>>) request.getAttribute("commentsMap");
+                            List<models.CommentWithUsername> comments = (commentsMap != null) ? commentsMap.get(post.getPostId()) : null;
                             if (comments != null && !comments.isEmpty()) {
-                                for (Object cObj : comments) {
-                                    models.CommentWithUsername comment = (models.CommentWithUsername) cObj;
+                                for (models.CommentWithUsername comment : comments) {
                         %>
-                        <li style="margin-bottom:6px; border-bottom:1px solid #eee; padding-bottom:4px;">
+                        <li>
                             <b><%= comment.getUsername() %>:</b> <%= comment.getCommentContent() %>
                         </li>
                         <%      }
                             } else { %>
-                        <li style="color:#888;">No comments yet.</li>
+                        <li class="no-comments">No comments yet.</li>
                         <% } %>
                     </ul>
                 </div>

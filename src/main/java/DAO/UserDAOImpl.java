@@ -77,4 +77,19 @@ public class UserDAOImpl implements UserDAO {
         }
         return -1;
     }
+
+    @Override
+    public boolean usernameExists(String username) {
+        String sql = "SELECT 1 FROM users WHERE username = ?";
+        try {
+            Connection conn = DBUtil.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
